@@ -1,0 +1,154 @@
+@model TransactionViewModel
+
+@{
+    ViewBag.Title = "My Transactions";
+}
+
+
+
+<div class="row">
+  <div class="col">
+    <button class="btn btn-primary" onclick="addTransaction()" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+        Add
+    </button>
+  </div>
+    <div class="col">
+        <select class="form-select" id="yearFilter" asp-for="FilterYear" asp-items="@(new SelectList(Model.AvailableYears))">
+            <option value="">All Years</option>
+        </select>
+    </div>
+    <div class="col">
+        <select class="form-select" id="monthFilter" asp-for="FilterMonth" asp-items="@(new SelectList(Model.AvailableMonths))">
+            <option value="">All Months</option>
+        </select>
+    </div>
+    <div class="col">
+        <button class="btn btn-primary" onclick="applyFilter()">Apply Filter</button>
+    </div>
+    
+</div>
+
+
+
+
+@{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach (var transaction in Model.Transactions)
+            {
+                var value = transaction.Type == TransactionType.Expense ? "Expense" : "Income";
+                <tr>
+                    <td>@transaction.Name</td>
+                    <td>@transaction.Price</td>
+                    <td>@transaction.Amount</td>
+                    <td>@transaction.Date</td>
+                    <td>@value</td>
+                    <td>
+                        <button class="btn btn-primary" 
+                                onclick="editTransaction('@transaction.Id', '@transaction.Name', '@transaction.Price', '@transaction.Amount', '@transaction.Date', '@value')" 
+                                type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                            Edit
+                        </button>
+                        
+                        <a class="btn btn-danger" asp-controller="Transactions" asp-action="DeleteTransaction"
+                           asp-route-id="@transaction.Id"
+                           asp-route-currentPage="@Model.CurrentPage"
+                           asp-route-filterYear="@Model.FilterYear">Delete</a>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+}
+<div>
+    <ul class="pagination">
+        @for (var i = 1; i <= Model.TotalPages; i++)
+            {
+                if (i == Model.CurrentPage)
+                {
+                    <li class="page-item active">
+                        <a class="page-link" href="#">@i</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { currentPage = i, filterYear = Model.FilterYear, filterMonth = Model.FilterMonth })">@i</a>
+                    </li>
+                    
+                }
+            }
+    </ul>
+    
+</div>
+<div class="offcanvasDiv"/>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+        <form id="transactionForm" onsubmit="onSubmit" class="needs-validation" novalidate>
+            <input type="hidden" id="id" name="id"/>
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Name" required="required">
+                <div class="invalid-feedback">
+                    Invalid or empty.
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="price" class="form-label">Price</label>
+                <input type="text" class="form-control" id="price" name="price" placeholder="Price" required="required">
+                <div class="invalid-feedback">
+                    Invalid or empty.
+                </div>
+                
+            </div>
+            <div class="mb-3">
+                <label for="amount" class="form-label">Amount</label>
+                <input type="text" class="form-control" id="amount" name="amount" placeholder="Amount" required="required">
+                <div class="invalid-feedback">
+                    Invalid or empty.
+                </div>
+                
+            </div>
+            <div class="mb-3">
+                <label for="date" class="form-label">Date</label>
+                <input type="date" class="form-control" id="date" name="date" placeholder="Date" required="required">
+                <div class="invalid-feedback">
+                    Invalid or empty.
+                </div>
+                
+            </div>
+            <div class="mb-3">
+                <label for="type" class="form-label">Type</label>
+                <select class="form-select" name="type" id="type" aria-label="Default select example">
+                    <option selected value="0">Income</option>
+                    <option value="1">Expense</option>
+                </select>
+            </div>
+            <input type="hidden" id="currentPage" name="currentPage" value="@Model.CurrentPage"/>
+            <input type="hidden" id="lastPage" name="lastPage" value="@Model.TotalPages"/>
+            <input type="hidden" id="filterYear" name="filterYear" value="@Model.FilterYear"/>
+            <input type="hidden" id="filterMonth" name="filterMonth" value="@Model.FilterMonth"/>
+            
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+  </div>
+</div>

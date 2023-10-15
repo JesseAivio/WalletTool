@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CF86912B-1F63-417B-A37F-2EE654AACC31}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{10496E91-FDE6-46D6-B964-996535DED8BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletTool.UI", "src\WalletTool.UI\WalletTool.UI.csproj", "{855A3359-F30A-4688-8F50-F7339AA8C811}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletTool.UI.Tests.Unit", "tests\WalletTool.UI.Tests.Unit\WalletTool.UI.Tests.Unit.csproj", "{FD1BE219-696C-469C-9A1E-37E6591BF7B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletTool.UI.Tests.Integration", "tests\WalletTool.UI.Tests.Integration\WalletTool.UI.Tests.Integration.csproj", "{C2D806DF-22E6-4A70-BD95-935CEC78B60E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{855A3359-F30A-4688-8F50-F7339AA8C811} = {CF86912B-1F63-417B-A37F-2EE654AACC31}
+		{FD1BE219-696C-469C-9A1E-37E6591BF7B7} = {10496E91-FDE6-46D6-B964-996535DED8BF}
+		{C2D806DF-22E6-4A70-BD95-935CEC78B60E} = {10496E91-FDE6-46D6-B964-996535DED8BF}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{855A3359-F30A-4688-8F50-F7339AA8C811}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{855A3359-F30A-4688-8F50-F7339AA8C811}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{855A3359-F30A-4688-8F50-F7339AA8C811}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{855A3359-F30A-4688-8F50-F7339AA8C811}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD1BE219-696C-469C-9A1E-37E6591BF7B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD1BE219-696C-469C-9A1E-37E6591BF7B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD1BE219-696C-469C-9A1E-37E6591BF7B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD1BE219-696C-469C-9A1E-37E6591BF7B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2D806DF-22E6-4A70-BD95-935CEC78B60E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2D806DF-22E6-4A70-BD95-935CEC78B60E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2D806DF-22E6-4A70-BD95-935CEC78B60E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2D806DF-22E6-4A70-BD95-935CEC78B60E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
