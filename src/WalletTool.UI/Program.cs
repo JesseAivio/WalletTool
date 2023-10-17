@@ -7,6 +7,8 @@ using WalletTool.UI.Database;
 using WalletTool.UI.Repositories;
 using WalletTool.UI.Services;
 using Azure.Security.KeyVault;
+using Azure.Security.KeyVault.Secrets;
+using WalletTool.UI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +33,8 @@ else
 {
     var keyVaultUrl = builder.Configuration["AzureKeyVault"];
     var tokenCredential = new DefaultAzureCredential();
-    builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUrl), tokenCredential);
+    var secretClient = new SecretClient(new Uri(keyVaultUrl), tokenCredential);
+    builder.Configuration.AddAzureKeyVault(secretClient, new CustomKeyVaultSecretManager());
 }
 var app = builder.Build();
 
