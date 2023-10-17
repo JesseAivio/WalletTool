@@ -16,19 +16,28 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '7' 
+        dotnet-version: '7.0.x' 
 
     - name: Restore dependencies
       run: dotnet restore src/WalletTool.UI/WalletTool.UI.csproj
 
     - name: Build
-      run: dotnet build src/WalletTool.UI/WalletTool.UI.csproj --no-restore
+      run: dotnet build src/WalletTool.UI/WalletTool.UI.csproj --configuration Release --no-restore
 
     - name: Restore test project dependencies
       run: dotnet restore tests/WalletTool.UI.Tests.Unit/WalletTool.UI.Tests.Unit.csproj
 
     - name: Test
-      run: dotnet test tests/WalletTool.UI.Tests.Unit/WalletTool.UI.Tests.Unit.csproj --no-build --verbosity normal
+      run: dotnet test tests/WalletTool.UI.Tests.Unit/WalletTool.UI.Tests.Unit.csproj --verbosity normal
+
+    - name: Publish
+      run: dotnet publish --configuration Release --output ./publish
+      
+    - name: Publish Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+          name: my-app-artifact
+          path: ./publish
 
   deploy_to_azure:
     needs: build_and_test 
@@ -37,11 +46,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: my-app-artifact
 
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: src/WalletTool.UI
 
