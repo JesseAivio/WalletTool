@@ -31,7 +31,7 @@ jobs:
       run: dotnet test tests/WalletTool.UI.Tests.Unit/WalletTool.UI.Tests.Unit.csproj --verbosity normal
 
     - name: Publish
-      run: dotnet publish --configuration Release --output ./publish
+      run: dotnet publish src/WalletTool.UI/WalletTool.UI.csproj --configuration Release --output ./publish
       
     - name: Publish Artifacts
       uses: actions/upload-artifact@v2
