@@ -51,6 +51,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: my-app-artifact
+          path: ./publish
 
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v2
