@@ -15,15 +15,25 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
 builder.Services.AddControllersWithViews();
+var sqlConnectionString = builder.Configuration["ConnectionStrings:Database"];
+if (string.IsNullOrEmpty(sqlConnectionString))
+{
+    throw new InvalidOperationException("Database connection string is missing or null");
+}
 builder.Services.AddDbContext<WalletContext>(options => 
-    options.UseSqlServer(builder.Configuration["ConnectionStrings:Database"]));
+    options.UseSqlServer(sqlConnectionString));
 
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ITransactionsService, TransactionsService>();
 builder.Services.AddSingleton<ICachingService, RedisCachingService>();
 
+var redisConnectionString = builder.Configuration["ConnectionStrings:Redis"];
+if (string.IsNullOrEmpty(redisConnectionString))
+{
+    throw new InvalidOperationException("Redis connection string is missing or null");
+}
 builder.Services.AddSingleton<IConnectionMultiplexer>(
-    ConnectionMultiplexer.Connect(builder.Configuration["ConnectionStrings:Redis"]));
+    ConnectionMultiplexer.Connect(redisConnectionString));
 
 if (builder.Environment.IsDevelopment())
 {
