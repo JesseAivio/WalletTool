@@ -28,7 +28,7 @@ jobs:
       run: dotnet restore tests/WalletTool.UI.Tests.Unit/WalletTool.UI.Tests.Unit.csproj
 
     - name: Test
-      run: dotnet test tests/WalletTool.UI.Tests.Unit/WalletTool.UI.Tests.Unit.csproj --configuration Release --no-build --verbosity normal
+      run: dotnet test tests/WalletTool.UI.Tests.Unit/WalletTool.UI.Tests.Unit.csproj --verbosity normal
 
   deploy_to_azure:
     needs: build_and_test 
