@@ -11,7 +11,21 @@ using Azure.Security.KeyVault.Secrets;
 using WalletTool.UI;
 
 var builder = WebApplication.CreateBuilder(args);
-
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddUserSecrets<Program>();
+}
+else
+{
+    var keyVaultUrl = builder.Configuration["AzureKeyVault"];
+    if (string.IsNullOrEmpty(keyVaultUrl))
+    {
+        throw new InvalidOperationException("No key vault Uri");
+    }
+    var tokenCredential = new DefaultAzureCredential();
+    var secretClient = new SecretClient(new Uri(keyVaultUrl), tokenCredential);
+    builder.Configuration.AddAzureKeyVault(secretClient, new CustomKeyVaultSecretManager());
+}
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
 builder.Services.AddControllersWithViews();
@@ -35,21 +49,7 @@ if (string.IsNullOrEmpty(redisConnectionString))
 builder.Services.AddSingleton<IConnectionMultiplexer>(
     ConnectionMultiplexer.Connect(redisConnectionString));
 
-if (builder.Environment.IsDevelopment())
-{
-    builder.Configuration.AddUserSecrets<Program>();
-}
-else
-{
-    var keyVaultUrl = builder.Configuration["AzureKeyVault"];
-    if (string.IsNullOrEmpty(keyVaultUrl))
-    {
-        throw new InvalidOperationException("No key vault Uri");
-    }
-    var tokenCredential = new DefaultAzureCredential();
-    var secretClient = new SecretClient(new Uri(keyVaultUrl), tokenCredential);
-    builder.Configuration.AddAzureKeyVault(secretClient, new CustomKeyVaultSecretManager());
-}
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
