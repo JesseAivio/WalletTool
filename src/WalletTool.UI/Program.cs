@@ -42,6 +42,10 @@ if (builder.Environment.IsDevelopment())
 else
 {
     var keyVaultUrl = builder.Configuration["AzureKeyVault"];
+    if (string.IsNullOrEmpty(keyVaultUrl))
+    {
+        throw new InvalidOperationException("No key vault Uri");
+    }
     var tokenCredential = new DefaultAzureCredential();
     var secretClient = new SecretClient(new Uri(keyVaultUrl), tokenCredential);
     builder.Configuration.AddAzureKeyVault(secretClient, new CustomKeyVaultSecretManager());
