@@ -18,11 +18,6 @@ if (builder.Environment.IsDevelopment())
 else
 {
     var keyVaultUrl = builder.Configuration["AzureKeyVault"];
-    if (string.IsNullOrEmpty(keyVaultUrl))
-    {
-        throw new InvalidOperationException("No key vault Uri");
-    }
-    Console.WriteLine($"Key Vault URL before SecretClient instantiation: {keyVaultUrl}");
     var tokenCredential = new DefaultAzureCredential();
     var secretClient = new SecretClient(new Uri(keyVaultUrl), tokenCredential);
     builder.Configuration.AddAzureKeyVault(secretClient, new CustomKeyVaultSecretManager());
@@ -31,10 +26,6 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
 builder.Services.AddControllersWithViews();
 var sqlConnectionString = builder.Configuration["ConnectionStrings:Database"];
-if (string.IsNullOrEmpty(sqlConnectionString))
-{
-    throw new InvalidOperationException("Database connection string is missing or null");
-}
 builder.Services.AddDbContext<WalletContext>(options => 
     options.UseSqlServer(sqlConnectionString));
 
@@ -43,10 +34,6 @@ builder.Services.AddScoped<ITransactionsService, TransactionsService>();
 builder.Services.AddSingleton<ICachingService, RedisCachingService>();
 
 var redisConnectionString = builder.Configuration["ConnectionStrings:Redis"];
-if (string.IsNullOrEmpty(redisConnectionString))
-{
-    throw new InvalidOperationException("Redis connection string is missing or null");
-}
 builder.Services.AddSingleton<IConnectionMultiplexer>(
     ConnectionMultiplexer.Connect(redisConnectionString));
 
